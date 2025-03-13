@@ -2,63 +2,55 @@
 include "./include/layout/header.php";
 include "./include/layout/navbar.php";
 include "./include/layout/slider.php";
+
+$query = "SELECT * FROM posts ORDER BY id DESC";
+$posts = $db->query($query);
+// print_r($posts);
 ?>
 
 <section class="content mt-4">
     <div class="row">
         <div class="col-lg-8">
             <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div class="col">
-                    <div class="card">
-                        <img src="./" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title">Card title</h5>
-                                <div><span class="badge text-bg-secondary">category</span></div>
-                            </div>
-                            <p class="card-text">This is a longer card with supporting text below as a natural
-                                lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="" class="btn btn-dark">view</a>
-                                <p class="mb-0">writer: Fatemeh</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="./assets/images/4.jpg" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title">Card title</h5>
-                                <div><span class="badge text-bg-secondary">category</span></div>
-                            </div>
-                            <p class="card-text">This is a longer card with supporting text below as a natural
-                                lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="" class="btn btn-dark">view</a>
-                                <p class="mb-0">writer: Fatemeh</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <img src="./assets/images/4.jpg" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title">Card title</h5>
-                                <div><span class="badge text-bg-secondary">category</span></div>
-                            </div>
-                            <p class="card-text">This is a longer card with supporting text below as a natural
-                                lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="" class="btn btn-dark">view</a>
-                                <p class="mb-0">writer: Fatemeh</p>
+                <?php if ($posts->rowCount() > 0): ?>
+                    <?php foreach ($posts as $post): ?>
+                        <?php
+                        $categoryId = $post['category_id'];
+                        $postCategory = $db->query("SELECT * FROM categories WHERE id=$categoryId")->fetch();
+                        $userId = $post['user_id'];
+                        $user = $db->query("SELECT * FROM users WHERE id=$userId")->fetch();
+                        $userFullName = $user['first_name'] . " " . $user['last_name'];
+                        ?>
+                        <div class="col">
+                            <div class="card">
+                                <img src="../uploads/posts/<?= $post['image'] ?>" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">
+                                            <?= $post['title'] ?>
+                                        </h5>
+                                        <div><span class="badge text-bg-secondary">
+                                                <?= $postCategory['title'] ?>
+                                            </span></div>
+                                    </div>
+                                    <p class="card-text">
+                                        <?= substr($post['body'], 0, 200) . "..." ?>
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="" class="btn btn-dark">view</a>
+                                        <p class="mb-0">writer: <?= $userFullName ?></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    <?php endforeach ?>
+                <?php else: ?>
+                    <div class="col">
+                        <div class="alert alert-danger" role="alert">
+                            no post found!
+                        </div>
                     </div>
-                </div>
+                <?php endif ?>
             </div>
         </div>
 
