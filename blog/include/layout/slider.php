@@ -1,5 +1,13 @@
 <?php
 
+$query = "SELECT * FROM posts_slider";
+$sliders = $db->query($query);
+
+// foreach ($sliders as $slider) {
+
+//     echo "<pre>";
+//     print_r($post->fetchAll());
+// }
 ?>
 
 <section class="slider-section">
@@ -13,27 +21,23 @@
                 aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="./assets/images/1.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block ">
-                    <h5 class="">First slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="./assets/images/2.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Second slide label</h5>
-                    <p>Some representative placeholder content for the second slide.</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="./assets/images/3.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Third slide label</h5>
-                    <p>Some representative placeholder content for the third slide.</p>
-                </div>
-            </div>
+            <?php if ($sliders->rowCount() > 0): ?>
+                <?php foreach ($sliders as $slider): ?>
+                    <?php
+                    $postId = $slider['post_id'];
+                    $post = $db->query("SELECT * FROM posts WHERE id=$postId")->fetch();
+                    ?>
+                    <div class="carousel-item <?= ($slider['is_active']) ? 'active' : ''; ?> ">
+                        <img src="../uploads/posts/<?= $post['image'] ?>" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block ">
+                            <h5 class=""><?= $post['title'] ?></h5>
+                            <p>
+                                <?= substr($post['body'], 0, 200) . "..." ?>
+                            </p>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            <?php endif ?>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
             data-bs-slide="prev">

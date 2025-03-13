@@ -1,8 +1,12 @@
-.top-nav a{
-    text-decoration: none;
-    color: black;
+.top-nav a {
+  text-decoration: none;
+  color: black;
 }
 
-.top-nav a.brand{
-    
+.top-nav a.brand {
+   
+}
+
+.carousel-item img {
+  max-height: 500px;
 }

@@ -18,7 +18,7 @@ try {
 
 <body>
     <div class="container">
-        <section class="navbar-section">
+        <section class="navbar-section" >
             <div class="top-nav d-flex flex-column flex-md-row justify-content-md-between align-items-center py-3">
                 <a href="" class="brand fw-bold">My Weblog</a>
                 <nav>
