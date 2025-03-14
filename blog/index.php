@@ -3,8 +3,17 @@ include "./include/layout/header.php";
 include "./include/layout/navbar.php";
 include "./include/layout/slider.php";
 
-$query = "SELECT * FROM posts ORDER BY id DESC";
-$posts = $db->query($query);
+if (isset($_GET['category'])) {
+    $categoryId = $_GET['category'];
+    $query = "SELECT * FROM posts where category_id= :cid ORDER BY id DESC";
+    $posts = $db->prepare($query);
+    $posts->execute(['cid' => $categoryId]);
+} else {
+    $query = "SELECT * FROM posts ORDER BY id DESC";
+    $posts = $db->query($query);
+}
+
+
 // print_r($posts);
 ?>
 
