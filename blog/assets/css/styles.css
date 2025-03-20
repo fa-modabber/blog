@@ -10,3 +10,12 @@
 .carousel-item img {
   max-height: 500px;
 }
+
+
+
+.red-feedback {
+  width: 100%;
+  margin-top: .25rem;
+  font-size: .875em;
+  color: red;
+}
