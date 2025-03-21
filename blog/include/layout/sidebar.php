@@ -1,6 +1,5 @@
 <?php
-print_r($_POST);
-
+session_start();
 try {
     // set the PDO error mode to exception
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -13,41 +12,51 @@ try {
 // newsletter form handling
 $newsletterName = $newsletterEmail = "";
 $newsletterNameError = $newsletterEmailError = "";
-$newsLetterSubmitMessage="";
+$newsLetterSubmitMessage = "";
+
+
+if (isset($_POST['subscribe'])) {
+    print("subscribe is settttttttt!");
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
     if (empty($_POST['name'])) {
-        $newsletterNameError = "name is necessary";
+        $_SESSION['newsletterNameError'] = "name is necessary";
     } else {
         $newsletterName = test_form_input($_POST['name']);
         if (!preg_match("/^[a-zA-Z-' ]*$/", $newsletterName)) {
-            $newsletterNameError = "Only letters and white space allowed";
+            $_SESSION['$newsletterNameError'] = "Only letters and white space allowed";
         }
     }
 
     if (empty($_POST['email'])) {
-        $newsletterEmailError = "email is necessary";
+        $_SESSION['$newsletterEmailError'] = "email is necessary";
     } else {
         $newsletterEmail = test_form_input($_POST['email']);
         if (!filter_var($newsletterEmail, FILTER_VALIDATE_EMAIL)) {
-            $newsletterEmailError = "Invalid email format";
+            $_SESSION['$newsletterEmailError'] = "Invalid email format";
         }
     }
 
-    if (empty($newsletterEmailError) && empty($newsletterNameError)) {
+    if (empty($_SESSION['newsletterEmailError']) && empty($_SESSION['newsletterNameError'])) {
         $subscribeInsert = $db->prepare("INSERT INTO subscribers (name, email) VALUES (:name,:email)");
         $subscribeInsert->execute(['name' => $newsletterName, 'email' => $newsletterEmail]);
-        $newsLetterSubmitMessage="you successfuly joined newsletter!";
-        header("Location: " . $_SERVER['PHP_SELF']);
+        $_SESSION['newsLetterSubmitMessage'] = "You successfully joined the newsletter!";
+        header("Location: " . $_SERVER['PHP_SELF'], true, 303);
         exit();
     }
 }
 
+$newsletterNameError = $_SESSION['newsletterNameError'] ?? "";
+$newsletterEmailError = $_SESSION['newsletterEmailError'] ?? "";
+$newsLetterSubmitMessage = $_SESSION['newsLetterSubmitMessage'] ?? "";
+
+unset($_SESSION['newsletterNameError'], $_SESSION['newsletterEmailError'], $_SESSION['newsLetterSubmitMessage']);
+
+
 function test_form_input($data)
 {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+    return htmlspecialchars(stripslashes(trim($data)));
 }
 ?>
 
@@ -91,20 +100,20 @@ function test_form_input($data)
     <div class="card newsletter mb-3">
         <div class="card-body">
             <h5 class="card-title">Join Our Newsletter</h5>
-            <div class="alert alert-success" role="alert">
+            <!-- <div class="alert alert-success" role="alert">
                <?php $newsLetterSubmitMessage ?>
-            </div>
+            </div> -->
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name">
                     <div class="red-feedback">
                         <?= $newsletterNameError ?>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" required>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email">
                     <div class="red-feedback">
                         <?= $newsletterEmailError ?>
                     </div>
