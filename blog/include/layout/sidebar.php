@@ -1,5 +1,4 @@
 <?php
-session_start();
 try {
     // set the PDO error mode to exception
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -25,16 +24,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
     } else {
         $newsletterName = test_form_input($_POST['name']);
         if (!preg_match("/^[a-zA-Z-' ]*$/", $newsletterName)) {
-            $_SESSION['$newsletterNameError'] = "Only letters and white space allowed";
+            $_SESSION['newsletterNameError'] = "Only letters and white space allowed";
         }
     }
 
     if (empty($_POST['email'])) {
-        $_SESSION['$newsletterEmailError'] = "email is necessary";
+        $_SESSION['newsletterEmailError'] = "email is necessary";
     } else {
         $newsletterEmail = test_form_input($_POST['email']);
         if (!filter_var($newsletterEmail, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['$newsletterEmailError'] = "Invalid email format";
+            $_SESSION['newsletterEmailError'] = "Invalid email format";
         }
     }
 
@@ -43,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
         $subscribeInsert->execute(['name' => $newsletterName, 'email' => $newsletterEmail]);
         $_SESSION['newsLetterSubmitMessage'] = "You successfully joined the newsletter!";
         header("Location: " . $_SERVER['PHP_SELF'], true, 303);
+        session_unset();
         exit();
     }
 }
