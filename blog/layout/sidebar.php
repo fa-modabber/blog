@@ -11,11 +11,7 @@ try {
 // newsletter form handling
 $newsletterName = $newsletterEmail = "";
 $newsletterNameError = $newsletterEmailError = "";
-$newsLetterSubmitMessage = "";
-
-// if (isset($_POST['subscribe'])) {
-//     print("subscribe is settttttttt!");
-// }
+$newsLetterSuccess = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
     $_SESSION['errors'] = [];
@@ -48,10 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
 
 $newsletterNameError = $_SESSION['errors']['name'] ?? "";
 $newsletterEmailError = $_SESSION['errors']['email'] ?? "";
-$newsLetterSubmitMessage = $_SESSION['success'] ?? "";
+$newsLetterSuccess = $_SESSION['success'] ?? "";
 
 unset($_SESSION['errors'], $_SESSION['success']);
-
 
 function test_form_input($data)
 {
@@ -99,9 +94,11 @@ function test_form_input($data)
     <div class="card newsletter mb-3">
         <div class="card-body">
             <h5 class="card-title">Join Our Newsletter</h5>
-            <div class="alert alert-success" role="alert">
-               <?php $newsLetterSubmitMessage ?>
+            <?php if(!empty($newsLetterSuccess)): ?>
+                <div class="alert alert-success" role="alert">
+               <?= $newsLetterSuccess ?>
             </div>
+            <?php endif ?>
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
