@@ -1,7 +1,9 @@
 <?php
-include "./include/layout/header.php";
-include "./include/layout/navbar.php";
-include "./include/layout/slider.php";
+include "../includes/config.php";
+include "../includes/db.php";
+include "./layout/header.php";
+include "./layout/navbar.php";
+include "./layout/slider.php";
 
 if (isset($_GET['category'])) {
     $categoryId = $_GET['category'];
@@ -13,8 +15,6 @@ if (isset($_GET['category'])) {
     $posts = $db->query($query);
 }
 
-
-// print_r($posts);
 ?>
 
 <section class="content mt-4">
@@ -65,10 +65,11 @@ if (isset($_GET['category'])) {
 
         <!-- sidebar -->
         <?php
-        include "./include/layout/sidebar.php";
+        include "./layout/sidebar.php";
         ?>
     </div>
 </section>
 <?php
-include "./include/layout/footer.php";
+include "./layout/footer.php";
+ob_end_flush();
 ?>

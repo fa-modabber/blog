@@ -1,8 +1,4 @@
 <?php
-
-include "./include/config.php";
-include "./include/db.php";
-
 try {
     // set the PDO error mode to exception
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -11,9 +7,7 @@ try {
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
 ?>
-
 
 <body>
     <div class="container">

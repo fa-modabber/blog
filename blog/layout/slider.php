@@ -1,13 +1,6 @@
 <?php
-
 $query = "SELECT * FROM posts_slider";
 $sliders = $db->query($query);
-
-// foreach ($sliders as $slider) {
-
-//     echo "<pre>";
-//     print_r($post->fetchAll());
-// }
 ?>
 
 <section class="slider-section">

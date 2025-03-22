@@ -13,45 +13,44 @@ $newsletterName = $newsletterEmail = "";
 $newsletterNameError = $newsletterEmailError = "";
 $newsLetterSubmitMessage = "";
 
-
-if (isset($_POST['subscribe'])) {
-    print("subscribe is settttttttt!");
-}
+// if (isset($_POST['subscribe'])) {
+//     print("subscribe is settttttttt!");
+// }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
+    $_SESSION['errors'] = [];
     if (empty($_POST['name'])) {
-        $_SESSION['newsletterNameError'] = "name is necessary";
+        $_SESSION['errors']['name'] = "Name is necessary";
     } else {
         $newsletterName = test_form_input($_POST['name']);
         if (!preg_match("/^[a-zA-Z-' ]*$/", $newsletterName)) {
-            $_SESSION['newsletterNameError'] = "Only letters and white space allowed";
+            $_SESSION['errors']['name'] = "Only letters and white space allowed";
         }
     }
 
     if (empty($_POST['email'])) {
-        $_SESSION['newsletterEmailError'] = "email is necessary";
+        $_SESSION['errors']['email'] = "Email is necessary";
     } else {
         $newsletterEmail = test_form_input($_POST['email']);
         if (!filter_var($newsletterEmail, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['newsletterEmailError'] = "Invalid email format";
+            $_SESSION['errors']['email'] = "Invalid email format";
         }
     }
 
-    if (empty($_SESSION['newsletterEmailError']) && empty($_SESSION['newsletterNameError'])) {
+    if (empty($_SESSION['errors'])) {
         $subscribeInsert = $db->prepare("INSERT INTO subscribers (name, email) VALUES (:name,:email)");
         $subscribeInsert->execute(['name' => $newsletterName, 'email' => $newsletterEmail]);
-        $_SESSION['newsLetterSubmitMessage'] = "You successfully joined the newsletter!";
-        header("Location: " . $_SERVER['PHP_SELF'], true, 303);
-        session_unset();
-        exit();
+        $_SESSION['success'] = "You successfully joined the newsletter!";
     }
+    header("Location: " . $_SERVER['PHP_SELF'], true, 303);
+    exit();
 }
 
-$newsletterNameError = $_SESSION['newsletterNameError'] ?? "";
-$newsletterEmailError = $_SESSION['newsletterEmailError'] ?? "";
-$newsLetterSubmitMessage = $_SESSION['newsLetterSubmitMessage'] ?? "";
+$newsletterNameError = $_SESSION['errors']['name'] ?? "";
+$newsletterEmailError = $_SESSION['errors']['email'] ?? "";
+$newsLetterSubmitMessage = $_SESSION['success'] ?? "";
 
-unset($_SESSION['newsletterNameError'], $_SESSION['newsletterEmailError'], $_SESSION['newsLetterSubmitMessage']);
+unset($_SESSION['errors'], $_SESSION['success']);
 
 
 function test_form_input($data)
@@ -100,9 +99,9 @@ function test_form_input($data)
     <div class="card newsletter mb-3">
         <div class="card-body">
             <h5 class="card-title">Join Our Newsletter</h5>
-            <!-- <div class="alert alert-success" role="alert">
+            <div class="alert alert-success" role="alert">
                <?php $newsLetterSubmitMessage ?>
-            </div> -->
+            </div>
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
