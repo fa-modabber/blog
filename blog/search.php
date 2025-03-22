@@ -5,14 +5,10 @@ include "./layout/includes/header.php";
 include "./layout/includes/navbar.php";
 include "./layout/includes/slider.php";
 
-if (isset($_GET['category'])) {
-    $categoryId = $_GET['category'];
-    $query = "SELECT * FROM posts where category_id= :cid ORDER BY id DESC";
-    $posts = $db->prepare($query);
-    $posts->execute(['cid' => $categoryId]);
-} else {
-    $query = "SELECT * FROM posts ORDER BY id DESC";
-    $posts = $db->query($query);
+if (isset($_GET['search'])) {
+    $keyword=$_GET['search'];
+    $posts = $db->prepare("");
+    $posts->execute(['keyword' => $keyword]);
 }
 
 ?>
@@ -20,6 +16,9 @@ if (isset($_GET['category'])) {
 <section class="content mt-4">
     <div class="row">
         <div class="col-lg-8">
+            <div class="alert alert-primary" role="alert">
+                Search Result for Posts with []
+            </div>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <?php if ($posts->rowCount() > 0): ?>
                     <?php foreach ($posts as $post): ?>
@@ -69,7 +68,7 @@ if (isset($_GET['category'])) {
         ?>
     </div>
 </section>
+
 <?php
-include "./layout/footer.php";
-ob_end_flush();
+include "./layout/includes/footer.php";
 ?>

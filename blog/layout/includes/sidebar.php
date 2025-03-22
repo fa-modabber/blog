@@ -60,12 +60,12 @@ function test_form_input($data)
     <div class="card search mb-3">
         <div class="card-body">
             <h5 class="card-title">Search in Blog</h5>
-            <form action="">
+            <form action="search.php" method="GET">
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"
                             style="font-size: 1rem; color: cornflowerblue;"></i></span>
                     <input type="text" class="form-control" placeholder="search ..."
-                        aria-label="Username" aria-describedby="basic-addon1">
+                        aria-label="Username" aria-describedby="basic-addon1" name="search">
                 </div>
             </form>
         </div>
@@ -94,10 +94,10 @@ function test_form_input($data)
     <div class="card newsletter mb-3">
         <div class="card-body">
             <h5 class="card-title">Join Our Newsletter</h5>
-            <?php if(!empty($newsLetterSuccess)): ?>
+            <?php if (!empty($newsLetterSuccess)): ?>
                 <div class="alert alert-success" role="alert">
-               <?= $newsLetterSuccess ?>
-            </div>
+                    <?= $newsLetterSuccess ?>
+                </div>
             <?php endif ?>
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="mb-3">
