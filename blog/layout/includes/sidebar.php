@@ -60,10 +60,10 @@ function test_form_input($data)
     <div class="card search mb-3">
         <div class="card-body">
             <h5 class="card-title">Search in Blog</h5>
-            <form action="search.php" method="GET">
+            <form action="/weblog-project/blog/search.php" method="GET">
                 <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"
-                            style="font-size: 1rem; color: cornflowerblue;"></i></span>
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1"><i class="bi bi-search"
+                            style="font-size: 1rem; color: cornflowerblue;"></i></button>
                     <input type="text" class="form-control" placeholder="search ..."
                         aria-label="Username" aria-describedby="basic-addon1" name="search">
                 </div>
@@ -71,7 +71,7 @@ function test_form_input($data)
         </div>
     </div>
 
-    <!-- Section: categories -->
+    <!-- Section: categories --> 
     <div class="card categories mb-3">
         <div class="card-header fw-bold">
             Categories

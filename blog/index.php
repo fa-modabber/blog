@@ -46,13 +46,13 @@ if (isset($_GET['category'])) {
                                         <?= substr($post['body'], 0, 200) . "..." ?>
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="" class="btn btn-dark">view</a>
+                                        <a href="/weblog-project/blog/single-post.php?post=<?= $post['id'] ?>" class="btn btn-dark">view</a>
                                         <p class="mb-0">writer: <?= $userFullName ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    <?php endforeach ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <div class="col">
                         <div class="alert alert-danger" role="alert">
@@ -65,11 +65,11 @@ if (isset($_GET['category'])) {
 
         <!-- sidebar -->
         <?php
-        include "./layout/sidebar.php";
+        include "./layout/includes/sidebar.php";
         ?>
     </div>
 </section>
 <?php
-include "./layout/footer.php";
+include "./layout/includes/footer.php";
 ob_end_flush();
 ?>

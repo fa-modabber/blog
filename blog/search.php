@@ -6,9 +6,10 @@ include "./layout/includes/navbar.php";
 include "./layout/includes/slider.php";
 
 if (isset($_GET['search'])) {
-    $keyword=$_GET['search'];
-    $posts = $db->prepare("");
-    $posts->execute(['keyword' => $keyword]);
+    $keyword = $_GET['search'];
+    $query = "SELECT * FROM posts WHERE body LIKE :keyword OR title LIKE :keyword ORDER BY id DESC";
+    $posts = $db->prepare($query);
+    $posts->execute(['keyword' => "%$keyword%"]);
 }
 
 ?>
@@ -17,10 +18,14 @@ if (isset($_GET['search'])) {
     <div class="row">
         <div class="col-lg-8">
             <div class="alert alert-primary" role="alert">
-                Search Result for Posts with []
+                Search Result for Posts with [<?= $keyword ?>]
             </div>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <?php if ($posts->rowCount() > 0): ?>
+            <?php if ($posts->rowCount() == 0): ?>
+                <div class="alert alert-danger" role="alert">
+                    no post found!
+                </div>
+            <?php else: ?>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
                     <?php foreach ($posts as $post): ?>
                         <?php
                         $categoryId = $post['category_id'];
@@ -45,26 +50,20 @@ if (isset($_GET['search'])) {
                                         <?= substr($post['body'], 0, 200) . "..." ?>
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="" class="btn btn-dark">view</a>
+                                        <a href="/weblog-project/blog/single-post.php?post=<?php $post['id'] ?>" class="btn btn-dark">view</a>
                                         <p class="mb-0">writer: <?= $userFullName ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach ?>
-                <?php else: ?>
-                    <div class="col">
-                        <div class="alert alert-danger" role="alert">
-                            no post found!
-                        </div>
-                    </div>
-                <?php endif ?>
-            </div>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- sidebar -->
         <?php
-        include "./layout/sidebar.php";
+        include "./layout/includes/sidebar.php";
         ?>
     </div>
 </section>
