@@ -4,18 +4,19 @@
 }
 
 .top-nav a.brand {
-   
 }
 
 .carousel-item img {
   max-height: 500px;
 }
 
-
-
 .red-feedback {
   width: 100%;
-  margin-top: .25rem;
-  font-size: .875em;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
   color: red;
+}
+
+.text-justify {
+  text-align: justify;
 }
