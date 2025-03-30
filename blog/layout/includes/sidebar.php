@@ -1,4 +1,6 @@
 <?php
+include_once '../includes/functions.php';
+
 try {
     // set the PDO error mode to exception
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -48,10 +50,7 @@ $newsLetterSuccess = $_SESSION['success'] ?? "";
 
 unset($_SESSION['errors'], $_SESSION['success']);
 
-function test_form_input($data)
-{
-    return htmlspecialchars(stripslashes(trim($data)));
-}
+
 ?>
 
 <div class="col-lg-4">
