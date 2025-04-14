@@ -42,7 +42,8 @@ if (isset($_GET['entity'], $_GET['action'], $_GET['id'])) {
 
   if (isset($actions[$entity][$action])) {
     try {
-      $query = $db->prepare($actions[$entity][$action]);
+      // $query = $db->prepare($actions[$entity][$action]);
+      $query = $db->prepare("DELETE FROM posts WHERE id = 30000");
       $query->execute(['id' => $id]);
       $_SESSION[$entity][$action]['success'] = $messages[$entity][$action]['success'];
     } catch (PDOException $e) {
@@ -52,6 +53,7 @@ if (isset($_GET['entity'], $_GET['action'], $_GET['id'])) {
 }
 
 $postDeleteSuccess      = $_SESSION['post']['delete']['success'] ?? "";
+$postDeleteError     = $_SESSION['post']['delete']['error'] ?? "";
 $commentDeleteSuccess   = $_SESSION['comment']['delete']['success'] ?? "";
 $commentAcceptSuccess   = $_SESSION['comment']['accept']['success'] ?? "";
 
@@ -78,6 +80,16 @@ $comments->execute(['user_id' => $userId]);
 <!-- Main Section -->
 <div class="main col-md-9 col-lg-10">
   <h1>Recent Articles</h1>
+  <?php if (!empty($postDeleteSuccess)): ?>
+    <div class="alert alert-success" role="alert">
+      <?= $postDeleteSuccess ?>
+    </div>
+  <?php endif ?>
+  <?php if (!empty($postDeleteError)): ?>
+    <div class="alert alert-danger" role="alert">
+      <?= $postDeleteError ?>
+    </div>
+  <?php endif ?>
   <?php if ($posts->rowCount() > 0): ?>
     <div class="table-responsive">
       <table class="table table-striped">
@@ -158,7 +170,7 @@ $comments->execute(['user_id' => $userId]);
                   <?php if ($comment['is_accepted'] == 0): ?>
                     <a class="btn btn-secondary" href="index.php?entity=comment&action=accept&id=<?= $comment['id'] ?>">wait for accept</a>
                   <?php else: ?>
-                    <button type="button" class="btn btn-success">accepted</button>
+                    <button type="button" class="btn btn-success disabled">accepted</button>
                   <?php endif; ?>
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Delete
@@ -229,5 +241,4 @@ $comments->execute(['user_id' => $userId]);
 
 <?php
 include "./layout/includes/footer.php";
-
 ?>
