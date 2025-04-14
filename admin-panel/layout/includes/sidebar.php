@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar Section -->
-            <div class="sidebar col-md-3 col-lg-2">
+            <div class="sidebar col-md-3 col-lg-2 bg-secondary-subtle">
                 <div
                     class="offcanvas-md offcanvas-end"
                     tabindex="-1"

@@ -42,8 +42,7 @@ if (isset($_GET['entity'], $_GET['action'], $_GET['id'])) {
 
   if (isset($actions[$entity][$action])) {
     try {
-      // $query = $db->prepare($actions[$entity][$action]);
-      $query = $db->prepare("DELETE FROM posts WHERE id = 30000");
+      $query = $db->prepare($actions[$entity][$action]);
       $query->execute(['id' => $id]);
       $_SESSION[$entity][$action]['success'] = $messages[$entity][$action]['success'];
     } catch (PDOException $e) {
@@ -57,7 +56,7 @@ $postDeleteError     = $_SESSION['post']['delete']['error'] ?? "";
 $commentDeleteSuccess   = $_SESSION['comment']['delete']['success'] ?? "";
 $commentAcceptSuccess   = $_SESSION['comment']['accept']['success'] ?? "";
 
-unset($_SESSION['post']['delete']['success'], $_SESSION['comment']['delete']['success'], $_SESSION['comment']['accept']['success']);
+unset($_SESSION['post'], $_SESSION['comment']);
 
 $userId = 1;
 
