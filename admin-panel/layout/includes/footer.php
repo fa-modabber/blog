@@ -11,8 +11,8 @@
     integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
     crossorigin="anonymous"></script>
 </body>
-<div style="width:100%; background-color:yellow">
+<footer>
     footer
-</div>
+</footer>
 
 </html>

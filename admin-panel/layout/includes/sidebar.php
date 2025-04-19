@@ -1,4 +1,6 @@
 <?php
+$path = $_SERVER['REQUEST_URI'];
+
 ?>
 
 <section class="content">
@@ -22,14 +24,14 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-house-fill fs-4 pe-2"></i>
-                                    <span class="fw-bold">Dashboard</span>
+                                <a class="nav-link active" aria-current="page" href="<?= BASE_URL ?>/admin-panel/index.php"><i class="bi bi-house-fill fs-4 pe-2"></i>
+                                    <span class="fw-bold <?= strpos($path, '/admin-panel/index.php') ? 'text-primary': '' ?>">Dashboard</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="<?= BASE_URL ?>/admin-panel/pages/posts/index.php">
                                     <i class="bi bi-book-half fs-4 pe-2"></i>
-                                    <span class="fw-bold">Articles</span>
+                                    <span class="fw-bold <?= str_contains($path, 'posts') ? 'text-primary': '' ?>">Posts</span>
                                 </a>
                             </li>
                             <li class="nav-item">

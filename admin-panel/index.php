@@ -10,17 +10,20 @@ $messages = [
   'post' => [
     'delete' => [
       'success' => "You successfully deleted a post!",
-      'error'   => "Problem in deleting the post, try again!"
+      'errorException'   => "Problem in deleting the post, try again!",
+      'errorNotFound' => "No post found with this ID."
     ]
   ],
   'comment' => [
     'delete' => [
       'success' => "You successfully deleted a comment!",
-      'error'   => "Problem in deleting the comment, try again!"
+      'errorException'   => "Problem in deleting the comment, try again!",
+      'errorNotFound' => "No comment found with this ID.",
     ],
     'accept' => [
       'success' => "You successfully accepted a comment!",
-      'error'   => "Problem in accepting the comment, try again!"
+      'errorException'   => "Problem in accepting the comment, try again!",
+      'errorNotFound' => "No comment found with this ID.",
     ]
   ]
 ];
@@ -44,17 +47,24 @@ if (isset($_GET['entity'], $_GET['action'], $_GET['id'])) {
     try {
       $query = $db->prepare($actions[$entity][$action]);
       $query->execute(['id' => $id]);
-      $_SESSION[$entity][$action]['success'] = $messages[$entity][$action]['success'];
+      if ($query->rowCount() > 0) {
+        echo "if";
+        $_SESSION[$entity][$action]['success'] = $messages[$entity][$action]['success'];
+      } else {
+        $_SESSION[$entity][$action]['error'] = $messages[$entity][$action]['errorNotFound'];
+      }
     } catch (PDOException $e) {
-      $_SESSION[$entity][$action]['error'] = $messages[$entity][$action]['error'];
+      $_SESSION[$entity][$action]['error'] = $messages[$entity][$action]['errorException'];
     }
   }
+  
 }
 
 $postDeleteSuccess      = $_SESSION['post']['delete']['success'] ?? "";
 $postDeleteError     = $_SESSION['post']['delete']['error'] ?? "";
 $commentDeleteSuccess   = $_SESSION['comment']['delete']['success'] ?? "";
 $commentAcceptSuccess   = $_SESSION['comment']['accept']['success'] ?? "";
+$commentAcceptError   = $_SESSION['comment']['accept']['error'] ?? "";
 
 unset($_SESSION['post'], $_SESSION['comment']);
 
@@ -147,6 +157,28 @@ $comments->execute(['user_id' => $userId]);
 
 
   <h1>Recent Comments</h1>
+  <?php if (!empty($commentDeleteSuccess)): ?>
+    <div class="alert alert-success" role="alert">
+      <?= $commentDeleteSuccess ?>
+    </div>
+  <?php endif ?>
+  <?php if (!empty($commentDeleteError)): ?>
+    <div class="alert alert-danger" role="alert">
+      <?= $commentDeleteError ?>
+    </div>
+  <?php endif ?>
+
+  <?php if (!empty($commentAcceptSuccess)): ?>
+    <div class="alert alert-success" role="alert">
+      <?= $commentAcceptSuccess ?>
+    </div>
+  <?php endif ?>
+  <?php if (!empty($commentAcceptError)): ?>
+    <div class="alert alert-danger" role="alert">
+      <?= $commentAcceptError ?>
+    </div>
+  <?php endif ?>
+
   <?php if ($comments->rowCount() > 0): ?>
     <div class="table-responsive">
       <table class="table table-striped">

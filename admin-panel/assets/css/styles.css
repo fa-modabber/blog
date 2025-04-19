@@ -3,3 +3,8 @@
   padding-bottom: 0.75rem;
   padding-left: 0.75rem;
 }
+
+footer {
+  width: 100%;
+  background-color: red;
+}
