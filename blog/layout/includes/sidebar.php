@@ -50,7 +50,6 @@ $newsLetterSuccess = $_SESSION['success'] ?? "";
 
 unset($_SESSION['errors'], $_SESSION['success']);
 
-
 ?>
 
 <div class="col-lg-4">

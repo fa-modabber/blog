@@ -6,27 +6,6 @@ include(__DIR__ . "/../includes/functions.php");
 include "./layout/includes/header.php";
 include "./layout/includes/sidebar.php";
 
-$messages = [
-  'post' => [
-    'delete' => [
-      'success' => "You successfully deleted a post!",
-      'errorException'   => "Problem in deleting the post, try again!",
-      'errorNotFound' => "No post found with this ID."
-    ]
-  ],
-  'comment' => [
-    'delete' => [
-      'success' => "You successfully deleted a comment!",
-      'errorException'   => "Problem in deleting the comment, try again!",
-      'errorNotFound' => "No comment found with this ID.",
-    ],
-    'accept' => [
-      'success' => "You successfully accepted a comment!",
-      'errorException'   => "Problem in accepting the comment, try again!",
-      'errorNotFound' => "No comment found with this ID.",
-    ]
-  ]
-];
 
 $actions = [
   'post' => [
@@ -48,32 +27,21 @@ if (isset($_GET['entity'], $_GET['action'], $_GET['id'])) {
       $query = $db->prepare($actions[$entity][$action]);
       $query->execute(['id' => $id]);
       if ($query->rowCount() > 0) {
-        echo "if";
-        $_SESSION[$entity][$action]['success'] = $messages[$entity][$action]['success'];
+        flash(entity: $entity, action: $action, result: 'success');
       } else {
-        $_SESSION[$entity][$action]['error'] = $messages[$entity][$action]['errorNotFound'];
+        flash(entity: $entity, action: $action, result: 'notFound');
       }
     } catch (PDOException $e) {
-      $_SESSION[$entity][$action]['error'] = $messages[$entity][$action]['errorException'];
+      flash(entity: $entity, action: $action, result: 'error');
     }
   }
-  
+  header("Location:index.php");
+  exit;
 }
 
-$postDeleteSuccess      = $_SESSION['post']['delete']['success'] ?? "";
-$postDeleteError     = $_SESSION['post']['delete']['error'] ?? "";
-$commentDeleteSuccess   = $_SESSION['comment']['delete']['success'] ?? "";
-$commentAcceptSuccess   = $_SESSION['comment']['accept']['success'] ?? "";
-$commentAcceptError   = $_SESSION['comment']['accept']['error'] ?? "";
-
-unset($_SESSION['post'], $_SESSION['comment']);
-
 $userId = 1;
-
 $categories = $db->query("SELECT * FROM categories");
-
 $posts = $db->query("SELECT * FROM posts ORDER BY id DESC LIMIT 5");
-
 $comments = $db->prepare("
     SELECT comments.*
     FROM comments
@@ -88,17 +56,10 @@ $comments->execute(['user_id' => $userId]);
 
 <!-- Main Section -->
 <div class="main col-md-9 col-lg-10">
+  <?php
+  flash();
+  ?>
   <h1>Recent Articles</h1>
-  <?php if (!empty($postDeleteSuccess)): ?>
-    <div class="alert alert-success" role="alert">
-      <?= $postDeleteSuccess ?>
-    </div>
-  <?php endif ?>
-  <?php if (!empty($postDeleteError)): ?>
-    <div class="alert alert-danger" role="alert">
-      <?= $postDeleteError ?>
-    </div>
-  <?php endif ?>
   <?php if ($posts->rowCount() > 0): ?>
     <div class="table-responsive">
       <table class="table table-striped">
@@ -157,27 +118,6 @@ $comments->execute(['user_id' => $userId]);
 
 
   <h1>Recent Comments</h1>
-  <?php if (!empty($commentDeleteSuccess)): ?>
-    <div class="alert alert-success" role="alert">
-      <?= $commentDeleteSuccess ?>
-    </div>
-  <?php endif ?>
-  <?php if (!empty($commentDeleteError)): ?>
-    <div class="alert alert-danger" role="alert">
-      <?= $commentDeleteError ?>
-    </div>
-  <?php endif ?>
-
-  <?php if (!empty($commentAcceptSuccess)): ?>
-    <div class="alert alert-success" role="alert">
-      <?= $commentAcceptSuccess ?>
-    </div>
-  <?php endif ?>
-  <?php if (!empty($commentAcceptError)): ?>
-    <div class="alert alert-danger" role="alert">
-      <?= $commentAcceptError ?>
-    </div>
-  <?php endif ?>
 
   <?php if ($comments->rowCount() > 0): ?>
     <div class="table-responsive">

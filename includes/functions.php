@@ -26,11 +26,9 @@ function flash($entity = null, $action = null, $result = null, $customMessage = 
         return;
     }
     if (!empty($_SESSION['flash'])) {
-        echo "session not empty";
         foreach ($_SESSION['flash'] as $key => $msg) {
             echo $msg;
         }
         unset($_SESSION['flash']);
     }
-    echo "end of flash function";
 }

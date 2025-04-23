@@ -36,10 +36,7 @@ try {
 <div class="main col-md-9 col-lg-10">
 
     <?php
-    echo "x";
     flash();
-    // echo $_SESSION['flash'];
-
     ?>
 
     <div class="d-flex justify-content-between align-items-center">
