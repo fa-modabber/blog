@@ -9,37 +9,62 @@ $userId = 1;
 $categories = $db->query("SELECT * FROM categories");
 
 // create post form handling
-$title = $category_id = $body = "";
+$title = $categoryId = $body = "";
 $image = null;
-$formInputsToValidate = ['title', 'image', 'body'];
 $errors = [];
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['addPost'])) {
-    foreach ($formInputsToValidate as $input) {
-        if (empty($_POST[$input])) { //check if fields are empty
-            $errors[$input] = "$input is required";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['addPost'])) {
+    // Validate inputs
+    if (empty($_POST['title'])) {
+        $errors['title'] = "Title is required";
+    } else {
+        $title = test_form_input($_POST['title']);
+    }
+
+    if (empty($_POST['body'])) {
+        $errors['body'] = "Body is required";
+    } else {
+        $body = test_form_input($_POST['body']);
+    }
+
+    if (empty($_POST['categoryId'])) {
+        $errors['categoryId'] = "Category is required";
+    } else {
+        $categoryId = test_form_input($_POST['categoryId']);
+    }
+
+    // Validate image
+    if (isset($_FILES['image'])) {
+        $file = $_FILES['image'];
+        $upload_dir = "../../../uploads/posts/";
+        $uploadResult = imageUpload($file, $upload_dir);
+
+        if ($uploadResult !== null) {
+            $errors['image'] = $uploadResult;
         } else {
-            $file = $_FILES['image'];
-            $upload_dir = "../../../uploads/posts/";
-            $uploadResult = imageUpload($file, $upload_dir);
-            if ($uploadResult == null) { //no error
-                $title = test_form_input($_POST['title']);
-                $categoryId = test_form_input($_POST['categoryId']);
-                $body = test_form_input($_POST['body']);
-                $image = basename($file["name"]) . '_' . time();
-                //insert to database
-                $postInsert = $db->prepare("INSERT INTO posts (title, category_id,image,body,user_id) VALUES (:title,:category_id,:image,:body,:user_id)");
-                $postInsert->execute(['title' => $title, 'category_id' => $categoryId, 'image' => $image, 'body' => $body, 'user_id' => $userId]);
-                $_SESSION['success'] = "You successfully created a post!";
-            } else {
-                $error['image'] = $uploadResult;
-            }
+            $image = basename($file["name"]) . '_' . time();
         }
+    } else {
+        $errors['image'] = "Image is required";
+    }
+
+    // If no errors, insert into database
+    if (empty($errors)) {
+        $stmt = $db->prepare("INSERT INTO posts (title, category_id, image, body, user_id) VALUES (:title, :category_id, :image, :body, :user_id)");
+        $stmt->execute([
+            'title' => $title,
+            'category_id' => $categoryId,
+            'image' => $image,
+            'body' => $body,
+            'user_id' => $userId
+        ]);
+        $_SESSION['success'] = "You successfully created a post!";
+    } else {
+        $_SESSION['errors'] = $errors;
     }
 }
 
-$errors['title'] = $_SESSION['errors']['title'] ?? "";
-$error['image'] = $_SESSION['errors']['image'] ?? "";
-$error['body'] = $_SESSION['errors']['body'] ?? "";
+$errors = $_SESSION['errors'] ?? "";
 $submitSuccess = $_SESSION['success'] ?? "";
 
 unset($_SESSION['errors'], $_SESSION['success']);
@@ -47,39 +72,30 @@ unset($_SESSION['errors'], $_SESSION['success']);
 function imageUpload($file, $upload_dir)
 {
     $error = validateImageUpload($file);
-    if ($error) {
-        return $error;
-    }
+    if ($error) return $error;
     $imageName = basename($file["name"]) . '_' . time();
     $target_dir = $upload_dir . $imageName;
-    if (move_uploaded_file($file['temp_name'], $target_dir)) {
+    if (move_uploaded_file($file['tmp_name'], $target_dir)) {
         return null;
     } else {
-        return "error in uploading the image ";
+        return "Error in uploading the image ";
     }
 }
 
 function validateImageUpload($file)
 {
-    if ($file['error'] === 0) {
-        return "error in uploading the image";
-    }
+    if ($file['error'] !== 0) return "Error in uploading the image";
 
     $check = getimagesize($file["tmp_name"]);
-    if ($check == false) {
-        return "File is not an image.";
-    }
+    if ($check == false) return "File is not an image.";
 
     $target_file = basename($file["name"]);
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $imageExt = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-    if (!in_array($imageFileType, $allowedTypes)) {
-        return "only jpg, jpeg, png and gif are allowed";
-    }
+    if (!in_array($imageExt, $allowedTypes)) return "Only jpg, jpeg, png and gif are allowed";
 
-    if ($file['size'] > 3 * 1024 * 1024) {
-        return "image size should be less than 3MB";
-    }
+    if ($file['size'] > 3 * 1024 * 1024) return "image size should be less than 3MB";
+
     return null; // no error
 }
 ?>
