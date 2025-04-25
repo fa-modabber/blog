@@ -13,43 +13,39 @@ $title = $categoryId = $body = "";
 $image = null;
 $errors = [];
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['addPost'])) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
     // Validate inputs
     if (empty($_POST['title'])) {
-        $errors['title'] = "Title is required";
+        $_SESSION['errors']['title'] = "Title is required";
     } else {
         $title = test_form_input($_POST['title']);
     }
 
     if (empty($_POST['body'])) {
-        $errors['body'] = "Body is required";
+        $_SESSION['errors']['body'] = "Body is required";
     } else {
         $body = test_form_input($_POST['body']);
     }
 
-    if (empty($_POST['categoryId'])) {
-        $errors['categoryId'] = "Category is required";
-    } else {
-        $categoryId = test_form_input($_POST['categoryId']);
-    }
+    $categoryId = test_form_input($_POST['categoryId']);
 
     // Validate image
-    if (isset($_FILES['image'])) {
+    if (isset($_FILES['image']) && $_FILES['image']['error'] !== 4) {
         $file = $_FILES['image'];
         $upload_dir = "../../../uploads/posts/";
         $uploadResult = imageUpload($file, $upload_dir);
 
         if ($uploadResult !== null) {
-            $errors['image'] = $uploadResult;
+            $_SESSION['errors']['image'] = $uploadResult;
         } else {
             $image = basename($file["name"]) . '_' . time();
         }
     } else {
-        $errors['image'] = "Image is required";
+        $_SESSION['errors']['image'] = "Image is required";
     }
 
     // If no errors, insert into database
-    if (empty($errors)) {
+    if (empty($_SESSION['errors'])) {
         $stmt = $db->prepare("INSERT INTO posts (title, category_id, image, body, user_id) VALUES (:title, :category_id, :image, :body, :user_id)");
         $stmt->execute([
             'title' => $title,
@@ -59,12 +55,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['addPost'])) {
             'user_id' => $userId
         ]);
         $_SESSION['success'] = "You successfully created a post!";
-    } else {
-        $_SESSION['errors'] = $errors;
     }
+    header("Location: " . $_SERVER['PHP_SELF'], true, 303);
+    exit();
 }
 
-$errors = $_SESSION['errors'] ?? "";
+$errors = [
+    'title' => $_SESSION['errors']['title'] ?? '',
+    'body' => $_SESSION['errors']['body'] ?? '',
+    'categoryId' => $_SESSION['errors']['categoryId'] ?? '',
+    'image' => $_SESSION['errors']['image'] ?? ''
+];
+
 $submitSuccess = $_SESSION['success'] ?? "";
 
 unset($_SESSION['errors'], $_SESSION['success']);
@@ -78,7 +80,7 @@ function imageUpload($file, $upload_dir)
     if (move_uploaded_file($file['tmp_name'], $target_dir)) {
         return null;
     } else {
-        return "Error in uploading the image ";
+        return "Error in uploading the image ttt";
     }
 }
 
@@ -138,7 +140,7 @@ function validateImageUpload($file)
             </div>
         </div>
         <div>
-            <button type="submit" class="btn btn-dark" name="addPost">create</button>
+            <button type="submit" class="btn btn-dark" name="submit">create</button>
         </div>
     </form>
 

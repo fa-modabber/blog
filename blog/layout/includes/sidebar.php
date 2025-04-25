@@ -15,6 +15,7 @@ $newsletterName = $newsletterEmail = "";
 $newsletterNameError = $newsletterEmailError = "";
 $newsLetterSuccess = "";
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subscribe'])) {
     $_SESSION['errors'] = [];
     if (empty($_POST['name'])) {
