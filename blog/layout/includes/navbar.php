@@ -13,11 +13,11 @@ try {
     <div class="container">
         <section class="navbar-section">
             <div class="top-nav d-flex flex-column flex-md-row justify-content-md-between align-items-center py-3">
-                <a href="index.php" class="brand fw-bold">My Weblog</a>
+                <a href="<?= BASE_URL ?>/blog/index.php" class="brand fw-bold">My Weblog</a>
                 <nav>
                     <?php if ($categories->rowCount() > 0): ?>
                         <?php foreach ($categories as $category): ?>
-                            <a href="index.php?category=<?= $category['id'] ?>" class=" <?= ((isset($_GET['category'])) && ($_GET['category'] == $category['id'])) ? 'fw-bold' : ''; ?> ">
+                            <a href="<?= BASE_URL ?>/blog/index.php?category=<?= $category['id'] ?>" class=" <?= ((isset($_GET['category'])) && ($_GET['category'] == $category['id'])) ? 'fw-bold' : ''; ?> ">
                                 <?= $category['title'] ?>
                             </a>
                         <?php endforeach ?>

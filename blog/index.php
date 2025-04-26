@@ -32,7 +32,7 @@ if (isset($_GET['category'])) {
                         ?>
                         <div class="col">
                             <div class="card">
-                                <img src="../uploads/posts/<?= $post['image'] ?>" class="card-img-top" alt="...">
+                                <img src="<?= BASE_URL ?>/uploads/posts/<?= $post['image'] ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <h5 class="card-title">
@@ -46,7 +46,7 @@ if (isset($_GET['category'])) {
                                         <?= substr($post['body'], 0, 200) . "..." ?>
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="/weblog-project/blog/single-post.php?post_id=<?= $post['id'] ?>" class="btn btn-dark">view</a>
+                                        <a href="<?= BASE_URL ?>/blog/single-post.php?post_id=<?= $post['id'] ?>" class="btn btn-dark">view</a>
                                         <p class="mb-0">writer: <?= $userFullName ?></p>
                                     </div>
                                 </div>
@@ -65,11 +65,13 @@ if (isset($_GET['category'])) {
 
         <!-- sidebar -->
         <?php
-        include "./layout/includes/sidebar.php";
+        include(BASE_PATH . "/blog/layout/includes/sidebar.php");
+
         ?>
     </div>
 </section>
 <?php
-include "./layout/includes/footer.php";
+include(BASE_PATH . "/blog/layout/includes/footer.php");
+
 ob_end_flush();
 ?>

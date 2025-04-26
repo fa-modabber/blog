@@ -21,7 +21,7 @@ $sliders = $db->query($query);
                     $post = $db->query("SELECT * FROM posts WHERE id=$postId")->fetch();
                     ?>
                     <div class="carousel-item <?= ($slider['is_active']) ? 'active' : ''; ?> ">
-                        <img src="../uploads/posts/<?= $post['image'] ?>" class="d-block w-100" alt="...">
+                        <img src="<?= BASE_URL ?>/uploads/posts/<?= $post['image'] ?>" class="d-block w-100" alt="...">
                         <div class="carousel-caption d-none d-md-block ">
                             <h5 class=""><?= $post['title'] ?></h5>
                             <p>

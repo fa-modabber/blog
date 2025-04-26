@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
     // Validate image
     if (isset($_FILES['image']) && $_FILES['image']['error'] !== 4) {
         $file = $_FILES['image'];
-        $upload_dir = "../../../uploads/posts/";
+        $upload_dir = BASE_PATH . '/uploads/posts/';  
         $uploadResult = imageUpload($file, $upload_dir);
 
         if ($uploadResult !== null) {

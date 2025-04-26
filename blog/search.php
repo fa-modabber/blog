@@ -1,9 +1,9 @@
 <?php
-include "../includes/config.php";
-include "../includes/db.php";
-include "./layout/includes/header.php";
-include "./layout/includes/navbar.php";
-include "./layout/includes/slider.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
+include(BASE_PATH . '/includes/db.php');
+include(BASE_PATH . "/blog/layout/includes/header.php");
+include(BASE_PATH . "/blog/layout/includes/navbar.php");
+include(BASE_PATH . "/blog/layout/includes/slider.php");
 
 if (isset($_GET['search'])) {
     $keyword = $_GET['search'];
@@ -36,7 +36,7 @@ if (isset($_GET['search'])) {
                         ?>
                         <div class="col">
                             <div class="card">
-                                <img src="../uploads/posts/<?= $post['image'] ?>" class="card-img-top" alt="...">
+                                <img src="<?= BASE_URL ?>/uploads/posts/<?= $post['image'] ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <h5 class="card-title">
@@ -50,7 +50,7 @@ if (isset($_GET['search'])) {
                                         <?= substr($post['body'], 0, 200) . "..." ?>
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="/weblog-project/blog/single-post.php?post_id=<?php $post['id'] ?>" class="btn btn-dark">view</a>
+                                        <a href="<?= BASE_URL ?>/blog/single-post.php?post_id=<?php $post['id'] ?>" class="btn btn-dark">view</a>
                                         <p class="mb-0">writer: <?= $userFullName ?></p>
                                     </div>
                                 </div>
@@ -63,11 +63,12 @@ if (isset($_GET['search'])) {
 
         <!-- sidebar -->
         <?php
-        include "./layout/includes/sidebar.php";
+        include(BASE_PATH . "/blog/layout/includes/sidebar.php");
         ?>
     </div>
 </section>
 
 <?php
-include "./layout/includes/footer.php";
+include(BASE_PATH . "/blog/layout/includes/footer.php");
+
 ?>

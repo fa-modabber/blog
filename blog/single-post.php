@@ -1,9 +1,9 @@
 <?php
-include "../includes/config.php";
-include "../includes/db.php";
-include_once '../includes/functions.php';
-include "./layout/includes/header.php";
-include "./layout/includes/navbar.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
+include(BASE_PATH . '/includes/db.php');
+include(BASE_PATH . '/includes/functions.php');
+include(BASE_PATH . "/blog/layout/includes/header.php");
+include(BASE_PATH . "/blog/layout/includes/navbar.php");
 
 $postId = isset($_GET['post_id']) ? $_GET['post_id'] : (isset($_POST['post_id']) ? $_POST['post_id'] : null);
 
@@ -70,7 +70,7 @@ if ($postId) {
             <?php else: ?>
                 <!-- single post -->
                 <div class="card mb-3">
-                    <img src="../uploads/posts/<?= $singlePost['image'] ?>" class="card-img-top" alt="post image">
+                    <img src="<?= BASE_URL ?>/uploads/posts/<?= $singlePost['image'] ?>" class="card-img-top" alt="post image">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">
@@ -144,7 +144,7 @@ if ($postId) {
         </div>
         <!-- sidebar -->
         <?php
-        include "./layout/includes/sidebar.php";
+        include(BASE_PATH . "/blog/layout/includes/sidebar.php");
         ?>
     </div>
 </section>
@@ -153,5 +153,6 @@ if ($postId) {
 
 
 <?php
-include "./layout/includes/footer.php";
+include(BASE_PATH . "/blog/layout/includes/footer.php");
+
 ?>

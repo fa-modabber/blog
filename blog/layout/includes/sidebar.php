@@ -1,5 +1,5 @@
 <?php
-include_once '../includes/functions.php';
+include(BASE_PATH . '/includes/functions.php');
 
 try {
     // set the PDO error mode to exception
@@ -70,7 +70,7 @@ unset($_SESSION['errors'], $_SESSION['success']);
         </div>
     </div>
 
-    <!-- Section: categories --> 
+    <!-- Section: categories -->
     <div class="card categories mb-3">
         <div class="card-header fw-bold">
             Categories
@@ -79,7 +79,7 @@ unset($_SESSION['errors'], $_SESSION['success']);
             <?php if ($categories->rowCount() > 0): ?>
                 <?php foreach ($categories as $category): ?>
                     <li class="list-group-item">
-                        <a href="index.php?category=<?= $category['id'] ?>" class="link-body-emphasis text-decoration-none
+                        <a href="<?= BASE_URL ?>/blog/index.php?category=<?= $category['id'] ?>" class="link-body-emphasis text-decoration-none
                         <?= ((isset($_GET['category'])) && ($_GET['category'] == $category['id'])) ? 'fw-bold' : '' ?>
                         "><?= $category['title'] ?></a>
                     </li>
