@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
         if ($uploadResult !== null) {
             $_SESSION['errors']['image'] = $uploadResult;
         } else {
-            $image = basename($file["name"]) . '_' . time();
+            $image =time(). '_' . basename($file["name"])  ;
         }
     } else {
         $_SESSION['errors']['image'] = "Image is required";

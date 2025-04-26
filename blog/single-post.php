@@ -1,7 +1,7 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
 include(BASE_PATH . '/includes/db.php');
-include(BASE_PATH . '/includes/functions.php');
+// include(BASE_PATH . '/includes/functions.php');
 include(BASE_PATH . "/blog/layout/includes/header.php");
 include(BASE_PATH . "/blog/layout/includes/navbar.php");
 
