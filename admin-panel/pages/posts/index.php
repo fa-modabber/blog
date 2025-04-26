@@ -1,9 +1,9 @@
 <?php
-include(__DIR__ . "/../../../includes/config.php");
-include(__DIR__ . "/../../../includes/db.php");
-include(__DIR__ . "/../../../includes/functions.php");
-include "../../layout/includes/header.php";
-include "../../layout/includes/sidebar.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
+include(BASE_PATH . '/includes/db.php');
+include(BASE_PATH . '/includes/functions.php');
+include(BASE_PATH . '/admin-panel/layout/includes/header.php');
+include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
 $userId = 1;
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
@@ -58,7 +58,9 @@ try {
                     <?php foreach ($posts as $post): ?>
                         <tr>
                             <td><?= $post['created_at'] ?></td>
-                            <td><?= $post['title'] ?></td>
+                            <td>
+                                <a href="<?= BASE_URL ?>/admin-panel/pages/posts/single.php?post_id=<?= $post['id'] ?>"><?= $post['title'] ?></a>
+                            </td>
                             <td>Otto</td>
                             <td>
                                 <div class="d-grid gap-2 d-md-block">
@@ -105,5 +107,6 @@ try {
 </section>
 
 <?php
-include "../../layout/includes/footer.php";
+include (BASE_PATH ."/admin-panel/layout/includes/footer.php");
+
 ?>

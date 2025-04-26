@@ -1,10 +1,14 @@
 <?php
 
-include(__DIR__ . "/../includes/config.php");
-include(__DIR__ . "/../includes/db.php");
-include(__DIR__ . "/../includes/functions.php");
-include "./layout/includes/header.php";
-include "./layout/includes/sidebar.php";
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
+include (BASE_PATH . '/includes/db.php');
+include (BASE_PATH . '/includes/functions.php');
+include (BASE_PATH .'/admin-panel/layout/includes/header.php');
+include (BASE_PATH ."/admin-panel/layout/includes/sidebar.php");
 
 
 $actions = [
@@ -75,7 +79,9 @@ $comments->execute(['user_id' => $userId]);
           <?php foreach ($posts as $post): ?>
             <tr>
               <td><?= $post['created_at'] ?></td>
-              <td><?= $post['title'] ?></td>
+              <td>
+                <a href="<?= BASE_URL ?>/admin-panel/pages/posts/single.php?post_id=<?= $post['id'] ?>"><?= $post['title'] ?></a>
+              </td>
               <td>Otto</td>
               <td>
                 <div class="d-grid gap-2 d-md-block">
@@ -211,5 +217,6 @@ $comments->execute(['user_id' => $userId]);
 </section>
 
 <?php
-include "./layout/includes/footer.php";
+include (BASE_PATH ."/admin-panel/layout/includes/footer.php");
+
 ?>

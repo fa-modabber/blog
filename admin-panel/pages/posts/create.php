@@ -1,9 +1,9 @@
 <?php
-include(__DIR__ . "/../../../includes/config.php");
-include(__DIR__ . "/../../../includes/db.php");
-include(__DIR__ . "/../../../includes/functions.php");
-include "../../layout/includes/header.php";
-include "../../layout/includes/sidebar.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
+include(BASE_PATH . '/includes/db.php');
+include(BASE_PATH . '/includes/functions.php');
+include(BASE_PATH . '/admin-panel/layout/includes/header.php');
+include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
 $userId = 1;
 $categories = $db->query("SELECT * FROM categories");
@@ -75,7 +75,7 @@ function imageUpload($file, $upload_dir)
 {
     $error = validateImageUpload($file);
     if ($error) return $error;
-    $imageName = basename($file["name"]) . '_' . time();
+    $imageName = time() . '_' . basename($file["name"]);
     $target_dir = $upload_dir . $imageName;
     if (move_uploaded_file($file['tmp_name'], $target_dir)) {
         return null;
@@ -150,5 +150,6 @@ function validateImageUpload($file)
 </section>
 
 <?php
-include "../../layout/includes/footer.php";
+include (BASE_PATH ."/admin-panel/layout/includes/footer.php");
+
 ?>
