@@ -33,7 +33,7 @@ try {
 ?>
 
 <!-- main section -->
-<div class="main col-md-9 col-lg-10">
+<div class="main col-md-9 col-lg-10 mt-3">
 
     <?php
     flash();
