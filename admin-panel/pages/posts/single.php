@@ -2,7 +2,6 @@
 
 include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
 include(BASE_PATH . '/includes/db.php');
-include(BASE_PATH . '/includes/functions.php');
 include(BASE_PATH . '/admin-panel/layout/includes/header.php');
 include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
@@ -12,8 +11,8 @@ if ($postId) {
         $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
         $stmnt->execute(['id' => $postId]);
         if ($stmnt->rowCount() > 0) {
-            $singlePost = $stmnt->fetch();
-            $categoryId = $singlePost['category_id'];
+            $post = $stmnt->fetch();
+            $categoryId = $post['category_id'];
             $postCategory = $db->query("SELECT * FROM categories WHERE id=$categoryId")->fetch();
         } else {
         }
@@ -25,7 +24,7 @@ if ($postId) {
 
 <div class="main col-md-9 col-lg-10 mt-3">
 
-    <?php if (empty($singlePost)): ?>
+    <?php if (empty($post)): ?>
         <div class="alert alert-danger" role="alert">
             no post found!
         </div>
@@ -33,7 +32,7 @@ if ($postId) {
         <!-- single post -->
         <div class="alert alert-primary" role="alert">
             <div class="d-flex gap-2 justify-content-center">
-                <a class="btn btn-secondary" href="edit.php">Edit</a>
+                <a class="btn btn-secondary" href="<?= BASE_URL ?>/admin-panel/pages/posts/edit.php?post_id=<?= $postId ?>">Edit</a>
 
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Delete
@@ -58,18 +57,18 @@ if ($postId) {
             </div>
         </div>
         <div class="card mb-3 mt-3">
-            <img src="/weblog-project/uploads/posts/<?= $singlePost['image'] ?>" class="card-img-top" alt="post image">
+            <img src="/weblog-project/uploads/posts/<?= $post['image'] ?>" class="card-img-top" alt="post image">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h5 class="card-title">
-                        <?= $singlePost['title'] ?>
+                        <?= $post['title'] ?>
                     </h5>
                     <div><span class="badge text-bg-secondary">
                             <?= $postCategory['title'] ?>
                         </span></div>
                 </div>
                 <p class="text-justify">
-                    <?= $singlePost['body'] ?>
+                    <?= $post['body'] ?>
                 </p>
             </div>
         </div>

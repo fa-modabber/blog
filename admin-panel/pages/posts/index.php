@@ -64,7 +64,7 @@ try {
                             <td>Otto</td>
                             <td>
                                 <div class="d-grid gap-2 d-md-block">
-                                    <a class="btn btn-secondary" href="edit.php">Edit</a>
+                                    <a class="btn btn-secondary" href="<?= BASE_URL ?>/admin-panel/pages/posts/edit.php?post_id=<?= $post['id'] ?>">Edit</a>
 
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                         Delete
