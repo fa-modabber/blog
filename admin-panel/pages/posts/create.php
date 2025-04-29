@@ -1,116 +1,28 @@
 <?php
+
 include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
 include(BASE_PATH . '/includes/db.php');
-include(BASE_PATH . '/includes/functions.php');
 include(BASE_PATH . '/admin-panel/layout/includes/header.php');
 include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
-$userId = 1;
 $categories = $db->query("SELECT * FROM categories");
 
-// create post form handling
-$title = $categoryId = $body = "";
-$image = null;
-$errors = [];
-
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
-    // Validate inputs
-    if (empty($_POST['title'])) {
-        $_SESSION['errors']['title'] = "Title is required";
-    } else {
-        $title = test_form_input($_POST['title']);
-    }
-
-    if (empty($_POST['body'])) {
-        $_SESSION['errors']['body'] = "Body is required";
-    } else {
-        $body = test_form_input($_POST['body']);
-    }
-
-    $categoryId = test_form_input($_POST['categoryId']);
-
-    // Validate image
-    if (isset($_FILES['image']) && $_FILES['image']['error'] !== 4) {
-        $file = $_FILES['image'];
-        $upload_dir = BASE_PATH . '/uploads/posts/';  
-        $uploadResult = imageUpload($file, $upload_dir);
-
-        if ($uploadResult !== null) {
-            $_SESSION['errors']['image'] = $uploadResult;
-        } else {
-            $image =time(). '_' . basename($file["name"])  ;
-        }
-    } else {
-        $_SESSION['errors']['image'] = "Image is required";
-    }
-
-    // If no errors, insert into database
-    if (empty($_SESSION['errors'])) {
-        $stmt = $db->prepare("INSERT INTO posts (title, category_id, image, body, user_id) VALUES (:title, :category_id, :image, :body, :user_id)");
-        $stmt->execute([
-            'title' => $title,
-            'category_id' => $categoryId,
-            'image' => $image,
-            'body' => $body,
-            'user_id' => $userId
-        ]);
-        $_SESSION['success'] = "You successfully created a post!";
-    }
-    header("Location: " . $_SERVER['PHP_SELF'], true, 303);
-    exit();
-}
-
 $errors = [
-    'title' => $_SESSION['errors']['title'] ?? '',
-    'body' => $_SESSION['errors']['body'] ?? '',
-    'categoryId' => $_SESSION['errors']['categoryId'] ?? '',
-    'image' => $_SESSION['errors']['image'] ?? ''
+    'title' => $_SESSION['post_create']['error']['title'] ?? '',
+    'body' => $_SESSION['post_create']['error']['body'] ?? '',
+    'categoryId' => $_SESSION['post_create']['error']['categoryId'] ?? '',
+    'image' => $_SESSION['post_create']['error']['image'] ?? ''
 ];
 
-$submitSuccess = $_SESSION['success'] ?? "";
-
-unset($_SESSION['errors'], $_SESSION['success']);
-
-function imageUpload($file, $upload_dir)
-{
-    $error = validateImageUpload($file);
-    if ($error) return $error;
-    $imageName = time() . '_' . basename($file["name"]);
-    $target_dir = $upload_dir . $imageName;
-    if (move_uploaded_file($file['tmp_name'], $target_dir)) {
-        return null;
-    } else {
-        return "Error in uploading the image ttt";
-    }
-}
-
-function validateImageUpload($file)
-{
-    if ($file['error'] !== 0) return "Error in uploading the image";
-
-    $check = getimagesize($file["tmp_name"]);
-    if ($check == false) return "File is not an image.";
-
-    $target_file = basename($file["name"]);
-    $imageExt = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-    if (!in_array($imageExt, $allowedTypes)) return "Only jpg, jpeg, png and gif are allowed";
-
-    if ($file['size'] > 3 * 1024 * 1024) return "image size should be less than 3MB";
-
-    return null; // no error
-}
+unset($_SESSION['post_create']['error']);
 ?>
 
 <!-- main section -->
 <div class="main col-md-9 col-lg-10 mt-3">
-    <?php if (!empty($submitSuccess)): ?>
-        <div class="alert alert-success" role="alert">
-            <?= $submitSuccess ?>
-        </div>
-    <?php endif ?>
+   
     <h1>create post</h1>
-    <form method="post" action="" class="row g-3" enctype="multipart/form-data">
+    <form method="post" action="store-post.php" class="row g-3" enctype="multipart/form-data">
+        
         <div class="col-sm-6 mb-4">
             <label for="exampleInputTitle" class="form-label">Title</label>
             <input type="text" class="form-control" id="exampleInputTitle" name="title">

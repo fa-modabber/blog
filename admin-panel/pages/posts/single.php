@@ -5,7 +5,7 @@ include(BASE_PATH . '/includes/db.php');
 include(BASE_PATH . '/admin-panel/layout/includes/header.php');
 include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
-$postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
+$postId = isset($_GET['id']) ? $_GET['id'] : null;
 if ($postId) {
     try {
         $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
@@ -18,6 +18,10 @@ if ($postId) {
         }
     } catch (PDOException $e) {
     }
+
+    $editSuccess = $_SESSION['post_update']['success'] ?? "";
+    $createSuccess = $_SESSION['post_create']['success'] ?? "";
+    unset($_SESSION['post_update']['success'], $_SESSION['post_create']['success']);
 }
 
 ?>
@@ -29,10 +33,15 @@ if ($postId) {
             no post found!
         </div>
     <?php else: ?>
+        <?php if (!empty($editSuccess)): ?>
+            <div class="alert alert-success" role="alert">
+                <?= $editSuccess ?>
+            </div>
+        <?php endif ?>
         <!-- single post -->
         <div class="alert alert-primary" role="alert">
             <div class="d-flex gap-2 justify-content-center">
-                <a class="btn btn-secondary" href="<?= BASE_URL ?>/admin-panel/pages/posts/edit.php?post_id=<?= $postId ?>">Edit</a>
+                <a class="btn btn-secondary" href="<?= BASE_URL ?>/admin-panel/pages/posts/edit.php?id=<?= $postId ?>">Edit</a>
 
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Delete

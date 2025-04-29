@@ -76,12 +76,12 @@ $comments->execute(['user_id' => $userId]);
             <tr>
               <td><?= $post['created_at'] ?></td>
               <td>
-                <a href="<?= BASE_URL ?>/admin-panel/pages/posts/single.php?post_id=<?= $post['id'] ?>"><?= $post['title'] ?></a>
+                <a href="<?= BASE_URL ?>/admin-panel/pages/posts/single.php?id=<?= $post['id'] ?>"><?= $post['title'] ?></a>
               </td>
               <td>Otto</td>
               <td>
                 <div class="d-grid gap-2 d-md-block">
-                  <a class="btn btn-secondary" href="<?= BASE_URL ?>/admin-panel/pages/posts/edit.php?post_id=<?= $post['id'] ?>">Edit</a>
+                  <a class="btn btn-secondary" href="<?= BASE_URL ?>/admin-panel/pages/posts/edit.php?id=<?= $post['id'] ?>">Edit</a>
 
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Delete

@@ -50,7 +50,7 @@ if (isset($_GET['search'])) {
                                         <?= substr($post['body'], 0, 200) . "..." ?>
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="<?= BASE_URL ?>/blog/single-post.php?post_id=<?php $post['id'] ?>" class="btn btn-dark">view</a>
+                                        <a href="<?= BASE_URL ?>/blog/single-post.php?id=<?php $post['id'] ?>" class="btn btn-dark">view</a>
                                         <p class="mb-0">writer: <?= $userFullName ?></p>
                                     </div>
                                 </div>

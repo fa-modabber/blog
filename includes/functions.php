@@ -32,3 +32,42 @@ function flash($entity = null, $action = null, $result = null, $customMessage = 
         unset($_SESSION['flash']);
     }
 }
+
+
+function imageUpload($file, $upload_dir)
+{
+    $error = validateImageUpload($file);
+    if ($error) return $error;
+    $imageName = time() . '_' . basename($file["name"]);
+    $target_dir = $upload_dir . $imageName;
+    if (move_uploaded_file($file['tmp_name'], $target_dir)) {
+        return null;
+    } else {
+        return "Error in uploading the image ttt";
+    }
+}
+
+function validateImageUpload($file)
+{
+    if ($file['error'] !== 0) return "Error in uploading the image";
+
+    $check = getimagesize($file["tmp_name"]);
+    if ($check == false) return "File is not an image.";
+
+    $target_file = basename($file["name"]);
+    $imageExt = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+    if (!in_array($imageExt, $allowedTypes)) return "Only jpg, jpeg, png and gif are allowed";
+
+    if ($file['size'] > 3 * 1024 * 1024) return "image size should be less than 3MB";
+
+    return null; // no error
+}
+
+function getPostById($id){
+
+}
+
+function getCategories(){
+    
+}

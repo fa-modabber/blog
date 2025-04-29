@@ -4,7 +4,7 @@ include(BASE_PATH . '/includes/db.php');
 include(BASE_PATH . '/admin-panel/layout/includes/header.php');
 include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
-$postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
+$postId = isset($_GET['id']) ? $_GET['id'] : null;
 if ($postId) {
     try {
         $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
@@ -17,6 +17,16 @@ if ($postId) {
         }
     } catch (PDOException $e) {
     }
+
+    $errors = [
+        'retrieve' => $_SESSION['post_update']['error']['retrieve'] ?? '',
+        'title' => $_SESSION['post_update']['error']['title'] ?? '',
+        'body' => $_SESSION['post_update']['error']['body'] ?? '',
+        'categoryId' => $_SESSION['post_update']['error']['categoryId'] ?? '',
+        'image' => $_SESSION['post_update']['error']['image'] ?? ''
+    ];
+
+    unset($_SESSION['post_update']['error']);
 }
 ?>
 
@@ -27,12 +37,13 @@ if ($postId) {
         </div>
     <?php else: ?>
         <h1>edit post</h1>
-        <form method="post" action="" class="row g-3" enctype="multipart/form-data">
+        <form method="post" action="update-post.php" class="row g-3" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?= htmlspecialchars($postId) ?>">
             <div class="col-sm-6 mb-4">
                 <label for="exampleInputTitle" class="form-label">Title</label>
                 <input type="text" class="form-control" id="exampleInputTitle" name="title" value="<?= $post['title'] ?>">
                 <div class="red-feedback">
-                    <?= "test"; ?>
+                    <?= $errors['title'] ?>
                 </div>
             </div>
             <div class="col-sm-6 mb-4">
@@ -47,14 +58,14 @@ if ($postId) {
                 <img src="<?= BASE_URL ?>/uploads/posts/<?= $post['image'] ?>" class="img-thumbnail" alt="post image">
                 <input type="file" class="form-control" name="image">
                 <div class="red-feedback">
-                    <?= "" ?>
+                    <?= $errors['image'] ?>
                 </div>
             </div>
             <div class="col-sm-12 mb-4">
                 <label for="formControlTextarea" class="form-label">Post Body</label>
-                <textarea class="form-control" id="FormControlTextarea" rows="3" name="body" ><?= $post['body'] ?></textarea>
+                <textarea class="form-control" id="FormControlTextarea" rows="3" name="body"><?= $post['body'] ?></textarea>
                 <div class="red-feedback">
-                    <?= "" ?>
+                    <?= $errors['body'] ?>
                 </div>
             </div>
             <div>

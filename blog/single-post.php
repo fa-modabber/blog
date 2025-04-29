@@ -5,7 +5,7 @@ include(BASE_PATH . '/includes/db.php');
 include(BASE_PATH . "/blog/layout/includes/header.php");
 include(BASE_PATH . "/blog/layout/includes/navbar.php");
 
-$postId = isset($_GET['post_id']) ? $_GET['post_id'] : (isset($_POST['post_id']) ? $_POST['post_id'] : null);
+$postId = isset($_GET['id']) ? $_GET['id'] : (isset($_POST['id']) ? $_POST['id'] : null);
 
 if ($postId) {
     $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
@@ -48,7 +48,7 @@ if ($postId) {
             $commentInsert->execute(['name' => $commentName, 'body' => $commentBody, 'post_id' => $postId]);
             $_SESSION['success'] = "You successfully Left a Comment!";
         }
-        header("Location: single-post.php?post_id=" . $postId);
+        header("Location: single-post.php?id=" . $postId);
         exit;
     }
 
@@ -101,7 +101,7 @@ if ($postId) {
                             </div>
                         <?php endif ?>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                            <input type="hidden" name="post_id" value="<?= htmlspecialchars($postId) ?>">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($postId) ?>">
                             <div class="mb-3">
                                 <label for="exampleInputName1" class="form-label">Name</label>
                                 <input type="text" name="commentName" class="form-control" id="exampleInputName1" aria-label="name">
