@@ -1,10 +1,10 @@
 <?php
 
 include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
-include (BASE_PATH . '/includes/db.php');
-include (BASE_PATH . '/includes/functions.php');
-include (BASE_PATH .'/admin-panel/layout/includes/header.php');
-include (BASE_PATH ."/admin-panel/layout/includes/sidebar.php");
+include(BASE_PATH . '/includes/db.php');
+include(BASE_PATH . '/includes/functions.php');
+include(BASE_PATH . '/admin-panel/layout/includes/header.php');
+include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
 
 $actions = [
@@ -59,6 +59,9 @@ $comments->execute(['user_id' => $userId]);
   <?php
   flash();
   ?>
+  <div class="d-flex justify-content-center align-items-center">
+    <a class="btn btn-dark" href="<?= BASE_URL ?>/admin-panel/pages/posts/create.php"> ایجاد مقاله</a>
+  </div>
   <h1>Recent Articles</h1>
   <?php if ($posts->rowCount() > 0): ?>
     <div class="table-responsive">
@@ -213,6 +216,6 @@ $comments->execute(['user_id' => $userId]);
 </section>
 
 <?php
-include (BASE_PATH ."/admin-panel/layout/includes/footer.php");
+include(BASE_PATH . "/admin-panel/layout/includes/footer.php");
 
 ?>

@@ -5,37 +5,51 @@ include(BASE_PATH . '/admin-panel/layout/includes/header.php');
 include(BASE_PATH . "/admin-panel/layout/includes/sidebar.php");
 
 $postId = isset($_GET['id']) ? $_GET['id'] : null;
-if ($postId) {
-    try {
-        $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
-        $stmnt->execute(['id' => $postId]);
-        if ($stmnt->rowCount() > 0) {
-            $post = $stmnt->fetch();
-            $categoryId = $post['category_id'];
-            $categories = $db->query("SELECT * FROM categories");
-        } else {
-        }
-    } catch (PDOException $e) {
-    }
-
-    $errors = [
-        'retrieve' => $_SESSION['post_update']['error']['retrieve'] ?? '',
-        'title' => $_SESSION['post_update']['error']['title'] ?? '',
-        'body' => $_SESSION['post_update']['error']['body'] ?? '',
-        'categoryId' => $_SESSION['post_update']['error']['categoryId'] ?? '',
-        'image' => $_SESSION['post_update']['error']['image'] ?? ''
-    ];
-
-    unset($_SESSION['post_update']['error']);
+if (!$postId) {
+    $errors['retrieve'] = 'post not found!';
+    exit;
 }
+
+$post = fetchPostById($db, $id);
+
+if (is_string($post)) {
+    $errors['retrieve'] = 'problem in retrieving data!';
+    exit;
+}
+
+if (is_null($post)) {
+    $errors['retrieve'] = 'post not found!';
+    exit;
+}
+
+$categoryId = $post['category_id'];
+
+$categories = fetchAllCategories($db);
+
+if (is_string($categories)) {
+    $errors['retrieve'] = 'problem in retrieving data!';
+    exit;
+}
+
+$errors = [
+    'retrieve' => $_SESSION['post_update']['error']['retrieve'] ?? '',
+    'title' => $_SESSION['post_update']['error']['title'] ?? '',
+    'body' => $_SESSION['post_update']['error']['body'] ?? '',
+    'categoryId' => $_SESSION['post_update']['error']['categoryId'] ?? '',
+    'image' => $_SESSION['post_update']['error']['image'] ?? '',
+    'action' => $_SESSION['post_update']['error']['action'] ?? '',
+];
+
+unset($_SESSION['post_update']['error']);
 ?>
 
 <div class="main col-md-9 col-lg-10 mt-3">
-    <?php if (empty($post)): ?>
+    <?php if (isset($errors['retrieve'])): ?>
         <div class="alert alert-danger" role="alert">
-            no post found!
+            <?= $errors['retrieve'] ?>
         </div>
     <?php else: ?>
+        
         <h1>edit post</h1>
         <form method="post" action="update-post.php" class="row g-3" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($postId) ?>">

@@ -1,4 +1,6 @@
 <?php
+
+
 function test_form_input($data)
 {
     return htmlspecialchars(stripslashes(trim($data)));
@@ -64,10 +66,33 @@ function validateImageUpload($file)
     return null; // no error
 }
 
-function getPostById($id){
-
+function fetchPostById($db, $id)
+{
+    try {
+        $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
+        $stmnt->execute(['id' => $id]);
+        if ($stmnt->rowCount() > 0) {
+            $post = $stmnt->fetch();
+            return $post;
+        } else return null;
+    } catch (PDOException $e) {
+        return $e->getMessage();
+    }
 }
 
-function getCategories(){
-    
+function fetchCategoryById($id) {}
+
+function fetchAllCategories($db)
+{
+    try {
+        $stmt  = $db->query("SELECT * FROM categories");
+        if ($stmt->rowCount() > 0) {
+            $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $categories;
+        } else return null;
+    } catch (PDOException $e) {
+        return $e->getMessage();
+    }
 }
+
+function fetchUserById($id) {}
