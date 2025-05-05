@@ -44,17 +44,23 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] !== 4) {
 
 // If no errors, insert into database
 if (empty($_SESSION['post_create']['error'])) {
-    $stmt = $db->prepare("INSERT INTO posts (title, category_id, image, body, user_id) VALUES (:title, :category_id, :image, :body, :user_id)");
-    $stmt->execute([
-        'title' => $title,
-        'category_id' => $categoryId,
-        'image' => $image,
-        'body' => $body,
-        'user_id' => $userId
-    ]);
-    $newPostId = $db->lastInsertId();
-    $_SESSION['post_create']['success'] = "You successfully created a post!";
-    header("Location: single.php?id=$newPostId");
+    try {
+        $stmt = $db->prepare("INSERT INTO posts (title, category_id, image, body, user_id) VALUES (:title, :category_id, :image, :body, :user_id)");
+        $stmt->execute([
+            'title' => $title,
+            'category_id' => $categoryId,
+            'image' => $image,
+            'body' => $body,
+            'user_id' => $userId
+        ]);
+        $newPostId = $db->lastInsertId();
+        $_SESSION['post_create']['success'] = "You successfully created a post!";
+        header("Location: single.php?id=$newPostId");
+    } catch (PDOException $e) {
+        $_SESSION['post_create']['error']['action'] = "Error in creating the post! ";
+        header("Location: create.php");
+        exit();
+    }
 } else {
     header("Location: create.php");
     exit();
