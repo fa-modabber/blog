@@ -17,7 +17,7 @@ if (is_string($post)) {
     exit;
 }
 
-if (is_null($post)) {
+if (empty($post)) {
     $errors['retrieve'] = 'post not found!';
     exit;
 }

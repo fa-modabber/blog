@@ -7,15 +7,20 @@ include(BASE_PATH . "/blog/layout/includes/navbar.php");
 
 $postId = isset($_GET['id']) ? $_GET['id'] : (isset($_POST['id']) ? $_POST['id'] : null);
 
+
+
 if ($postId) {
-    $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
-    $stmnt->execute(['id' => $postId]);
-    $post = $stmnt->fetch();
-    $categoryId = $post['category_id'];
-    $postCategory = $db->query("SELECT * FROM categories WHERE id=$categoryId")->fetch();
-    $userId = $post['user_id'];
-    $user = $db->query("SELECT * FROM users WHERE id=$userId")->fetch();
-    $userFullName = $user['first_name'] . " " . $user['last_name'];
+
+    $stmt = $db->prepare("
+    SELECT posts.*, categories.title AS category_title, users.first_name, users.last_name
+    FROM posts
+    JOIN categories ON posts.category_id = categories.id
+    JOIN users ON posts.user_id = users.id
+    WHERE posts.id = :id
+    ");
+    $stmt->execute(['id' => $post['id']]);
+    $post = $stmt->fetch();
+    $userFullName = $post['first_name'] . ' ' . $post['last_name'];
 
     $comments = $db->prepare("SELECT * FROM comments WHERE post_id=:id AND is_accepted='1'");
     $comments->execute(['id' => $postId]);

@@ -66,33 +66,81 @@ function validateImageUpload($file)
     return null; // no error
 }
 
-function fetchPostById($db, $id)
+
+
+//db functions
+
+function fetchAllPosts(PDO $db)
 {
     try {
-        $stmnt = $db->prepare("SELECT * FROM posts WHERE id=:id");
-        $stmnt->execute(['id' => $id]);
-        if ($stmnt->rowCount() > 0) {
-            $post = $stmnt->fetch();
-            return $post;
-        } else return null;
+        $stmt = $db->query("SELECT * FROM posts ORDER BY id DESC");
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $posts;
     } catch (PDOException $e) {
         return $e->getMessage();
     }
 }
 
-function fetchCategoryById($id) {}
+function fetchAllPostsWithDetails(){
+    
+}
 
-function fetchAllCategories($db)
+function fetchPostsByCategory(PDO $db, $categoryId)
+{
+    try {
+        $stmt = $db->prepare("SELECT * FROM posts where category_id= :cid ORDER BY id DESC");
+        $stmt->execute(['cid' => $categoryId]);
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $posts;
+    } catch (PDOException $e) {
+        return $e->getMessage();
+    }
+}
+
+function fetchPostById(PDO $db, $postId)
+{
+    try {
+        $stmt = $db->prepare("SELECT * FROM posts WHERE id=:id");
+        $stmt->execute(['id' => $postId]);
+        $post = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $post;
+    } catch (PDOException $e) {
+        return $e->getMessage();
+    }
+}
+
+function fetchPostWithDetailsById(PDO $db, $postId)
+{
+    $query = "
+    SELECT posts.*, categories.name AS category_name, users.first_name, users.last_name
+    FROM posts
+    JOIN categories ON posts.category_id = categories.id
+    JOIN users ON posts.user_id = users.id
+    WHERE posts.id = :id
+";
+
+    try {
+        $stmt = $db->prepare($query);
+        $stmt->execute(['id' => $postId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        return $e->getMessage();
+    }
+}
+
+function fetchAllCategories(PDO $db)
 {
     try {
         $stmt  = $db->query("SELECT * FROM categories");
-        if ($stmt->rowCount() > 0) {
-            $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $categories;
-        } else return null;
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $categories;
     } catch (PDOException $e) {
         return $e->getMessage();
     }
 }
 
-function fetchUserById($id) {}
+function fetchCategoryById(PDO $db, $categoryId) {}
+
+
+
+function fetchUserById(PDO $db, $userId) {}

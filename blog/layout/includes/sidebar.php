@@ -1,5 +1,5 @@
 <?php
-include(BASE_PATH . '/includes/functions.php');
+// include(BASE_PATH . '/includes/functions.php');
 
 try {
     // set the PDO error mode to exception

@@ -18,7 +18,7 @@ if (is_string($oldPost)) {
     exit;
 }
 
-if (is_null($oldPost)) {
+if (empty($oldPost)) {
     $_SESSION['post_update']['error']['retrieve'] = 'post not found!';
     header("Location: " . BASE_URL . "/admin-panel/pages/posts/index.php");
     exit;
