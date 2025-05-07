@@ -1,4 +1,5 @@
 <?php
+
 $query = "SELECT * FROM posts_slider";
 $sliders = $db->query($query);
 ?>
