@@ -1,3 +1,0 @@
-<?php
-$db = new PDO(DNS, DB_USERNAME, DB_PASSWORD);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

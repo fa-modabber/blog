@@ -1,23 +1,20 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/weblog-project/includes/config.php';
-include(BASE_PATH . '/includes/db.php');
-include(BASE_PATH . '/blog/layout/includes/header.php');
-include(BASE_PATH . '/blog/layout/includes/navbar.php');
-include(BASE_PATH . '/blog/layout/includes/slider.php');
 
-$categoryId = isset($_GET['category']) ? $_GET['category'] : null;
-if (isset($categoryId)) {
-    $posts = fetchPostsByCategory($db, $categoryId);
-} else {
-    $posts = fetchAllPosts($db);
-}
+require_once 'C:/xampp/htdocs/weblog-project/init.php';
 
-if (is_string($posts)) {
-    $errors['retrieve'] = 'problem in retrieving data!';
-}
+//layout
+include(BASE_PATH . '/blog/view/includes/header.php');
+include(BASE_PATH . '/blog/view/includes/navbar.php');
+include(BASE_PATH . '/blog/view/includes/slider.php');
 
-if (empty($posts)) {
-    $errors['retrieve'] = 'no post found!';
+$categoryId = $_GET['category'] ?? null;
+
+try {
+    $posts = isset($categoryId)
+        ? fetchPostsWithDetailsByCategory($db, $categoryId)
+        : fetchPostsWithDetails($db);
+} catch (PDOException $e) {
+    flash('post', 'fetch', 'error');
 }
 
 ?>
@@ -25,11 +22,8 @@ if (empty($posts)) {
 <section class="content mt-4">
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <?php if (isset($errors['retrieve'])): ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $errors['retrieve'] ?>
-                </div>
-            <?php else: ?>
+            <?php display_flash_messages(); ?>
+            <?php if (!empty($posts)): ?>
                 <div class="row row-cols-1 row-cols-md-2 g-4">
                     <?php foreach ($posts as $post): ?>
                         <?php
@@ -51,25 +45,31 @@ if (empty($posts)) {
                                         <?= substr($post['body'], 0, 200) . "..." ?>
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="<?= BASE_URL ?>/blog/single-post.php?id=<?= $post['id'] ?>" class="btn btn-dark">view</a>
+                                        <a href="<?= BASE_URL ?>/blog/view/post-single.php?id=<?= $post['id'] ?>" class="btn btn-dark">view</a>
                                         <p class="mb-0">writer: <?= $userFullName ?></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php endif ?>
+
                 </div>
+            <?php else:  ?>
+                <div class="alert alert-warning" role="alert">
+                        no post found for this category
+                    </div>
+               
+            <?php endif ?>
         </div>
 
         <!-- sidebar -->
         <?php
-        include(BASE_PATH . "/blog/layout/includes/sidebar.php");
+        include(BASE_PATH . "/blog/view/includes/sidebar.php");
         ?>
     </div>
 </section>
 <?php
-include(BASE_PATH . "/blog/layout/includes/footer.php");
+include(BASE_PATH . "/blog/view/includes/footer.php");
 
 ob_end_flush();
 ?>
